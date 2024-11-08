@@ -5,6 +5,10 @@ on:
     tags: ["v*"]
     branches: ["main"]
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -21,7 +25,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          push: true
+          push: ${{ startsWith(github.ref, 'refs/tags/') }} # Only push on tags
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
@@ -37,15 +41,27 @@ jobs:
 
       - name: Build binaries
         run: |
+          # Build for each platform
           GOOS=linux GOARCH=amd64 go build -o pg-archiver-linux-amd64
           GOOS=darwin GOARCH=amd64 go build -o pg-archiver-darwin-amd64
           GOOS=darwin GOARCH=arm64 go build -o pg-archiver-darwin-arm64
+          GOOS=windows GOARCH=amd64 go build -o pg-archiver-windows-amd64.exe
+
+          # Set execute permissions
+          chmod +x pg-archiver-*
+
+          # Create compressed archives
+          tar czf pg-archiver-linux-amd64.tar.gz pg-archiver-linux-amd64
+          tar czf pg-archiver-darwin-amd64.tar.gz pg-archiver-darwin-amd64
+          tar czf pg-archiver-darwin-arm64.tar.gz pg-archiver-darwin-arm64
+          zip pg-archiver-windows-amd64.zip pg-archiver-windows-amd64.exe
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            pg-archiver-linux-amd64
-            pg-archiver-darwin-amd64
-            pg-archiver-darwin-arm64
+            pg-archiver-linux-amd64.tar.gz
+            pg-archiver-darwin-amd64.tar.gz
+            pg-archiver-darwin-arm64.tar.gz
+            pg-archiver-windows-amd64.zip
