@@ -23,7 +23,6 @@ type IoTRecord struct {
     Value     float64   
 }
 
-// ParquetFile represents our parquet schema
 type ParquetFile struct {
     ID        int64  `parquet:"name=id, type=INT64"`
     Timestamp int64  `parquet:"name=timestamp,type=INT64"`
