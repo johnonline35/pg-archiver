@@ -1,0 +1,54 @@
+# Compiled binary
+/pg-archiver
+*.exe
+
+# Go specific
+*.o
+*.a
+*.so
+*.test
+*.out
+*.prof
+*.trace
+/vendor/
+
+# Go workspace file
+go.work
+
+# Dependency directories
+/pkg/
+
+# Output directories
+/bin/
+/dist/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Environment files
+.env
+.env.local
+*.env.*
+
+# Temporary files
+*.tmp
+/tmp/
+/temp/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Parquet files (in case you're testing locally)
+*.parquet
+
+# Coverage profiles
+coverage.txt
+coverage.html
+*.cover
+
+# Log files
+*.log
