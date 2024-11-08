@@ -1,6 +1,6 @@
 module github.com/johnonline35/pg-archiver
 
-go 1.21
+go 1.23
 
 require (
 	github.com/aws/aws-sdk-go-v2/config v1.28.3
